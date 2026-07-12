@@ -2,7 +2,7 @@
 ## IDBI Innovate 2026 - Track 01: Wealth Advisory
 
 This document contains a comprehensive review of the Singleton Wealth Advisory application codebase built for **IDBI Innovate 2026 Hackathon (National-Level FinTech Challenge)**.
-
+https://singleton-idbi-2026-zcim.vercel.app/
 ---
 
 ## 🏗️ Architecture Stack
