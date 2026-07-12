@@ -47,6 +47,22 @@ const getMockResponse = (query) => {
   }
 };
 
+// Simple custom bold markdown helper for advisory messages
+const renderMessageText = (text) => {
+  if (!text) return "";
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={index} className="font-extrabold text-orange-400">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+};
+
 export default function App() {
   const [messages, setMessages] = useState([
     {
@@ -358,10 +374,12 @@ export default function App() {
       setAvatarState("confident");
       setMessages(prev => [...prev, {
         sender: "advisor",
-        text: "✅ Transaction Confirmed: ₹5,000 swept into IDBI Mutual Fund.",
+        text: "✅ Transaction Confirmed: ₹5,000 swept into IDBI Mutual Fund. \n\nWould you like to view your optimized asset allocation now?",
         state: "confident",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        metrics: null
+        metrics: null,
+        isUndoable: true,
+        isUndone: false
       }]);
       setIsLoading(false);
     }, 600);
@@ -382,8 +400,33 @@ export default function App() {
       setAvatarState("confident");
       setMessages(prev => [...prev, {
         sender: "advisor",
-        text: "✅ Mandate Authorized: Portfolio rebalancing initiated.",
+        text: "✅ Mandate Authorized: Portfolio rebalancing initiated. \n\nShall I set up a monthly SIP alert for this configuration?",
         state: "confident",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        metrics: null,
+        isUndoable: true,
+        isUndone: false
+      }]);
+      setIsLoading(false);
+    }, 600);
+  };
+
+  const handleUndoTransaction = (msgIndex) => {
+    // Mark as undone
+    setMessages(prev => prev.map((m, idx) => {
+      if (idx === msgIndex) {
+        return { ...m, isUndone: true };
+      }
+      return m;
+    }));
+
+    setIsLoading(true);
+    setTimeout(() => {
+      setAvatarState("friendly");
+      setMessages(prev => [...prev, {
+        sender: "advisor",
+        text: "⏪ **Action Revoked:** The transaction has been canceled and funds have been securely reverted to your primary balance.",
+        state: "friendly",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         metrics: null
       }]);
@@ -529,7 +572,24 @@ export default function App() {
                     !isUser && msg.state === "confident" ? "border-l-emerald-500" : ""
                   }`}
                 >
-                  <p className="leading-relaxed whitespace-pre-line text-left">{msg.text}</p>
+                  <p className="leading-relaxed whitespace-pre-line text-left">{renderMessageText(msg.text)}</p>
+                  
+                  {/* UNDO BUTTON INJECTION */}
+                  {!isUser && msg.isUndoable && (
+                    <div className="mt-2.5 pt-2.5 border-t border-slate-900/60 flex justify-end">
+                      <button
+                        disabled={msg.isUndone}
+                        onClick={() => handleUndoTransaction(index)}
+                        className={`text-[10px] font-mono tracking-wide px-3 py-1 rounded-lg transition-all active:scale-95 border ${
+                          msg.isUndone
+                            ? "text-slate-500 bg-slate-900/40 border-slate-800 cursor-not-allowed"
+                            : "text-orange-400 bg-orange-950/20 border-orange-500/20 hover:bg-orange-500/10 cursor-pointer"
+                        }`}
+                      >
+                        {msg.isUndone ? "Revoked ↩️" : "Undo Transaction ↩️"}
+                      </button>
+                    </div>
+                  )}
                   
                   {/* DYNAMIC CHART INJECTION MODULE */}
                   {!isUser && msg.metrics && (
