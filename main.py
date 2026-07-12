@@ -65,6 +65,8 @@ async def chat_advisory(request: ChatRequest):
     spending_keywords = ["spend", "analyze", "runway", "cash"]
     investment_keywords = ["invest", "optimize", "portfolio", "save"]
     greeting_keywords = ["hi", "hello", "balance", "account"]
+    sip_keywords = ["sip", "alert", "monthly", "remind"]
+    affirmation_keywords = ["yes", "sure", "ok", "please", "do it"]
     
     if not query_lower:
         avatar_state = "friendly"
@@ -120,6 +122,22 @@ async def chat_advisory(request: ChatRequest):
                 {"name": "Equities", "value": 60, "color": "from-emerald-500 to-teal-500"}
             ]
         }
+
+    elif any(kw in query_lower for kw in sip_keywords):
+        avatar_state = "confident"
+        speech_text = (
+            "✅ **SIP Alert Active:** I have scheduled a monthly recurring notification for your 40/60 allocation. "
+            "I'll ping you on the 1st of next month before your idle cash accumulates. What else can we optimize today?"
+        )
+        metrics = {}
+
+    elif any(kw in query_lower for kw in affirmation_keywords):
+        avatar_state = "friendly"
+        speech_text = (
+            "Great, I've confirmed that action for you! Your profile has been updated. "
+            "Feel free to use the suggestion chips below if you want to explore more analytics."
+        )
+        metrics = {}
         
     elif any(kw in query_lower for kw in greeting_keywords):
         avatar_state = "friendly"
@@ -136,7 +154,6 @@ async def chat_advisory(request: ChatRequest):
         }
         
     else:
-        # Polish: helpful fallback instead of hardcoded Zomato output
         avatar_state = "friendly"
         speech_text = (
             f"I'm still learning, Sejal. I currently specialize in analyzing your cash flow and "

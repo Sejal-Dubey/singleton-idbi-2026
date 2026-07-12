@@ -64,19 +64,29 @@ const renderMessageText = (text) => {
 };
 
 export default function App() {
-  const [messages, setMessages] = useState([
-    {
-      sender: "advisor",
-      text: "Hello Sejal! I'm your Singleton Wealth Advisor. Ask me to 'Analyze my spending' to check your cash flow, or 'Optimize my investments' to view your customized asset allocation matrix.",
-      state: "friendly",
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      metrics: {
-        income: 85000,
-        savings: 120000,
-        runway: 24000
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem("singleton_chat");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse initialized messages", e);
       }
     }
-  ]);
+    return [
+      {
+        sender: "advisor",
+        text: "Hello Sejal! I'm your Singleton Wealth Advisor. Ask me to 'Analyze my spending' to check your cash flow, or 'Optimize my investments' to view your customized asset allocation matrix.",
+        state: "friendly",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        metrics: {
+          income: 85000,
+          savings: 120000,
+          runway: 24000
+        }
+      }
+    ];
+  });
   const [inputText, setInputText] = useState("");
   const [avatarState, setAvatarState] = useState("friendly");
   const [isLoading, setIsLoading] = useState(false);
@@ -85,6 +95,11 @@ export default function App() {
   const chatEndRef = useRef(null);
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
+
+  // Sync messages with local storage for session durability
+  useEffect(() => {
+    localStorage.setItem("singleton_chat", JSON.stringify(messages));
+  }, [messages]);
 
   // Auto-scroll to bottom of chat
   useEffect(() => {
@@ -478,9 +493,34 @@ export default function App() {
               <p className="text-[10px] text-slate-400">Team Singleton Advisor Twin</p>
             </div>
           </div>
-          <div className="text-right">
-            <span className="text-[10px] text-slate-500 block font-mono">PORTFOLIO</span>
-            <span className="text-xs font-bold text-emerald-400">₹2,05,000 Total</span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => {
+                localStorage.removeItem("singleton_chat");
+                setAvatarState("friendly");
+                setMessages([
+                  {
+                    sender: "advisor",
+                    text: "Hello Sejal! I'm your Singleton Wealth Advisor. Ask me to 'Analyze my spending' to check your cash flow, or 'Optimize my investments' to view your customized asset allocation matrix.",
+                    state: "friendly",
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    metrics: {
+                      income: 85000,
+                      savings: 120000,
+                      runway: 24000
+                    }
+                  }
+                ]);
+              }}
+              className="text-[10px] text-slate-400 hover:text-orange-400 flex items-center gap-1 font-mono transition-all active:scale-95 cursor-pointer bg-slate-900/60 p-1 py-1 px-2 border border-slate-800 rounded-md hover:border-orange-500/20 hover:bg-slate-900"
+              title="Clear Session History"
+            >
+              <span>Clear 🔄</span>
+            </button>
+            <div className="text-right">
+              <span className="text-[10px] text-slate-500 block font-mono">PORTFOLIO</span>
+              <span className="text-xs font-bold text-emerald-400">₹2,05,000 Total</span>
+            </div>
           </div>
         </div>
 
