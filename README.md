@@ -55,26 +55,31 @@ Below is the interface state processing live transactional feedback:
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/your-username/singleton-idbi-2026.git](https://github.com/your-username/singleton-idbi-2026.git)
-Boot the FastAPI Backend Server:
+   git clone https://github.com/Sejal-Dubey/singleton-idbi-2026.git
+   cd singleton-idbi-2026
+   ```
 
-Bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-Initialize the React Client Application:
+2. **Boot the FastAPI Backend Server:**
+   ```bash
+   # Backend requirements and main.py are in the repository root
+   pip install -r requirements.txt
+   python main.py
+   ```
 
-Bash
-cd frontend
-npm install
-npm run dev
-☁️ Cloud Infrastructure Mapping
-Production Backend (Render)
-Binding Core: Reads int(os.environ.get("PORT", 8000)) to dynamically accept cloud ingress routers.
+3. **Initialize the React Client Application:**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
-Execution Strategy: Stateless worker threads optimize horizontal compute cycles during heavy loads.
+### ☁️ Cloud Infrastructure Mapping
 
-Production Frontend (Vercel)
-Target Pipeline: Configure the build pipeline to read the VITE_API_URL environment flag pointing to your cloud backend domain.
+* **Production Backend (Render / Heroku):**
+  * **Binding Core:** Reads dynamic port configurations via `int(os.environ.get("PORT", 8000))` to run seamlessly behind ingress routers.
+  * **Execution Strategy:** Stateless workers optimize compute cycles and concurrency.
 
-Fallback Fallback: Automatically switches to http://localhost:8000 if no environment variable is found, ensuring a smooth local debugging experience.
+* **Production Frontend (Vercel):**
+  * **Target Pipeline:** Configure the Vercel build environment to include the `VITE_API_URL` environment flag pointing to your cloud backend domain.
+  * **Fallback:** Automatically defaults to `http://localhost:8000` if no environment variable is present, ensuring smooth local debugging.
+
