@@ -338,11 +338,65 @@ export default function App() {
     }
   };
 
+  const handleSuggestionClick = (text) => {
+    setInputText(text);
+    handleMessageSubmit(text);
+  };
+
+  const executeSweep = (msgIndex) => {
+    // Update message execution state to green success state
+    setMessages(prev => prev.map((m, idx) => {
+      if (idx === msgIndex) {
+        return { ...m, isExecuted: true };
+      }
+      return m;
+    }));
+
+    // Append confirmation message from the avatar twin
+    setIsLoading(true);
+    setTimeout(() => {
+      setAvatarState("confident");
+      setMessages(prev => [...prev, {
+        sender: "advisor",
+        text: "✅ Transaction Confirmed: ₹5,000 swept into IDBI Mutual Fund.",
+        state: "confident",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        metrics: null
+      }]);
+      setIsLoading(false);
+    }, 600);
+  };
+
+  const executeRebalance = (msgIndex) => {
+    // Update message execution state to green success state
+    setMessages(prev => prev.map((m, idx) => {
+      if (idx === msgIndex) {
+        return { ...m, isExecuted: true };
+      }
+      return m;
+    }));
+
+    // Append confirmation message from the avatar twin
+    setIsLoading(true);
+    setTimeout(() => {
+      setAvatarState("confident");
+      setMessages(prev => [...prev, {
+        sender: "advisor",
+        text: "✅ Mandate Authorized: Portfolio rebalancing initiated.",
+        state: "confident",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        metrics: null
+      }]);
+      setIsLoading(false);
+    }, 600);
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleMessageSubmit(inputText);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-4 selection:bg-orange-500 selection:text-white font-sans antialiased overflow-hidden relative">
@@ -501,23 +555,24 @@ export default function App() {
                           <div className="flex justify-between items-center text-[10px] text-slate-500 mt-2 font-mono">
                             <span>High-Burn Zomato/Swiggy</span>
                             <span className="text-red-400 font-bold">{msg.metrics.dining_percentage}% Eaten</span>
-                          </div>
-
-                          {/* Quick Decision Box */}
+                                   {/* Quick Decision Box */}
                           <div className="mt-3 bg-indigo-950/20 border border-indigo-900/30 rounded-lg p-2.5 flex items-center justify-between gap-1">
                             <div>
                               <span className="text-[9px] text-indigo-400 block font-mono font-semibold tracking-wider">SWEEP ACTION SUGGESTED</span>
                               <span className="text-[11px] text-slate-300 font-semibold block">Transfer unused ₹{msg.metrics.sweep_amount.toLocaleString()} surplus?</span>
                             </div>
                             <button 
-                              onClick={() => {
-                                alert("₹5,000 sweep execution initiated. Securely transferring idle runway into High-Yield Mutual Fund (IDBI Wealth compounding engine).");
-                              }} 
-                              className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] px-3 py-1.5 rounded-lg transition shadow-lg active:scale-95"
+                              disabled={msg.isExecuted}
+                              onClick={() => executeSweep(index)} 
+                              className={`font-bold text-[10px] px-3 py-1.5 rounded-lg transition shadow-lg active:scale-95 ${
+                                msg.isExecuted 
+                                  ? "bg-emerald-600 text-slate-950 font-extrabold cursor-not-allowed" 
+                                  : "bg-indigo-600 hover:bg-indigo-500 text-white"
+                              }`}
                             >
-                              Sweep Now
+                              {msg.isExecuted ? "Executed ✅" : "Sweep Now"}
                             </button>
-                          </div>
+                          </div>                        </div>
                         </div>
                       )}
 
@@ -559,12 +614,15 @@ export default function App() {
 
                           {/* Execution Button */}
                           <button
-                            onClick={() => {
-                              alert("Investment portfolio configured. Executing IDBI wealth rebalancing split (40% FD / 60% Equity index).");
-                            }}
-                            className="w-full mt-3 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-slate-950 font-extrabold text-[11px] py-2 rounded-xl transition shadow-lg tracking-wider"
+                            disabled={msg.isExecuted}
+                            onClick={() => executeRebalance(index)}
+                            className={`w-full mt-3 active:scale-95 font-extrabold text-[11px] py-2 rounded-xl transition shadow-lg tracking-wider ${
+                              msg.isExecuted 
+                                ? "bg-emerald-600 text-slate-950 cursor-not-allowed"
+                                : "bg-emerald-600 hover:bg-emerald-500 text-slate-950"
+                            }`}
                           >
-                            Rebalance & Execute Allocation
+                            {msg.isExecuted ? "Executed ✅" : "Rebalance & Execute Allocation"}
                           </button>
                         </div>
                       )}
@@ -596,40 +654,45 @@ export default function App() {
         </div>
 
         {/* Quick Suggest PII Pills */}
-        <div className="px-4 py-2 border-t border-slate-900 bg-slate-950/60 flex gap-2 overflow-x-auto select-none no-scrollbar">
-          <button
-            onClick={() => handleMessageSubmit("Analyze my spending")}
-            className="flex-shrink-0 glass-effect hover:bg-orange-500/10 hover:border-orange-500/30 text-orange-400 px-3 py-1.5 rounded-full text-xs font-mono tracking-wide transition-all active:scale-95"
-          >
-            ⚡ Analyze spending
-          </button>
-          <button
-            onClick={() => handleMessageSubmit("Optimize my investments")}
-            className="flex-shrink-0 glass-effect hover:bg-emerald-500/10 hover:border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-mono tracking-wide transition-all active:scale-95"
-          >
-            📈 Optimize investments
-          </button>
-          <button
-            onClick={() => {
-              setAvatarState("friendly");
-              setMessages([
-                {
-                  sender: "advisor",
-                  text: "System Reset. Hello Sejal! I'm your Singleton Wealth Advisor. Ask me to 'Analyze my spending' to check your cash flow, or 'Optimize my investments' to view your customized asset allocation matrix.",
-                  state: "friendly",
-                  timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                  metrics: {
-                    income: 85000,
-                    savings: 120000,
-                    runway: 24000
+        <div className="px-4 py-3 border-t border-slate-900 bg-slate-950/60 flex flex-col gap-2">
+          <div className="text-[10px] text-slate-500 font-mono flex items-center gap-1 select-none">
+            <span>💡 Suggestions:</span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto select-none no-scrollbar pb-1">
+            <button
+              onClick={() => handleSuggestionClick("Analyze my spending")}
+              className="flex-shrink-0 glass-effect hover:bg-orange-500/10 hover:border-orange-500/30 text-orange-400 px-3 py-1.5 rounded-full text-xs font-mono tracking-wide transition-all cursor-pointer active:scale-95"
+            >
+              ⚡ Analyze spending
+            </button>
+            <button
+              onClick={() => handleSuggestionClick("Optimize my investments")}
+              className="flex-shrink-0 glass-effect hover:bg-emerald-500/10 hover:border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-mono tracking-wide transition-all cursor-pointer active:scale-95"
+            >
+              📈 Optimize investments
+            </button>
+            <button
+              onClick={() => {
+                setAvatarState("friendly");
+                setMessages([
+                  {
+                    sender: "advisor",
+                    text: "System Reset. Hello Sejal! I'm your Singleton Wealth Advisor. Ask me to 'Analyze my spending' to check your cash flow, or 'Optimize my investments' to view your customized asset allocation matrix.",
+                    state: "friendly",
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    metrics: {
+                      income: 85000,
+                      savings: 120000,
+                      runway: 24000
+                    }
                   }
-                }
-              ]);
-            }}
-            className="flex-shrink-0 glass-effect hover:bg-slate-800 text-slate-400 px-3 py-1.5 rounded-full text-xs font-mono transition-all active:scale-95"
-          >
-            🔄 Reset Chat
-          </button>
+                ]);
+              }}
+              className="flex-shrink-0 glass-effect hover:bg-slate-800 text-slate-400 px-3 py-1.5 rounded-full text-xs font-mono transition-all cursor-pointer active:scale-95"
+            >
+              🔄 Reset Chat
+            </button>
+          </div>
         </div>
 
         {/* Input Bar terminal */}

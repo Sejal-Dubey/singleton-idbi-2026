@@ -10,7 +10,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-
 # Robust CORS Setup
 app.add_middleware(
     CORSMiddleware,
@@ -26,6 +25,7 @@ USER_PROFILE = {
     "income": 85000,
     "savings": 120000,
     "discretionary_runway": 24000,
+    "portfolio_balance": 205000,
     "high_burn_spending": {
         "food_delivery": 8500,  # Zomato & Swiggy
         "entertainment": 4500,
@@ -61,6 +61,11 @@ async def chat_advisory(request: ChatRequest):
     speech_text = ""
     metrics = {}
     
+    # Keyword list definitions
+    spending_keywords = ["spend", "analyze", "runway", "cash"]
+    investment_keywords = ["invest", "optimize", "portfolio", "save"]
+    greeting_keywords = ["hi", "hello", "balance", "account"]
+    
     if not query_lower:
         avatar_state = "friendly"
         speech_text = (
@@ -75,7 +80,7 @@ async def chat_advisory(request: ChatRequest):
             "runway": USER_PROFILE["discretionary_runway"]
         }
     
-    elif "spending" in query_lower or "analyze" in query_lower or "spent" in query_lower:
+    elif any(kw in query_lower for kw in spending_keywords):
         avatar_state = "analytical"
         food_spend = USER_PROFILE["high_burn_spending"]["food_delivery"]
         runway = USER_PROFILE["discretionary_runway"]
@@ -97,7 +102,7 @@ async def chat_advisory(request: ChatRequest):
             "remaining_runway": runway - food_spend
         }
         
-    elif "optimize" in query_lower or "investment" in query_lower or "portfolio" in query_lower:
+    elif any(kw in query_lower for kw in investment_keywords):
         avatar_state = "confident"
         speech_text = (
             f"Here is your customized asset allocation matrix tailored for optimal compounding. "
@@ -116,19 +121,28 @@ async def chat_advisory(request: ChatRequest):
             ]
         }
         
-    else:
-        # Catch-all friendly response
+    elif any(kw in query_lower for kw in greeting_keywords):
         avatar_state = "friendly"
         speech_text = (
-            f"Hi {USER_PROFILE['name']}! I'm here. Try asking me to 'Analyze my spending' to see "
-            f"how the Zomato/Swiggy bills affect your savings, or type 'Optimize my investments' "
-            f"to view your IDBI asset allocation roadmap."
+            f"Hello Sejal! Your current aggregate portfolio balance across IDBI accounts is "
+            f"₹{USER_PROFILE['portfolio_balance']:,}. I am ready to advise you. How would you like "
+            f"to grow your wealth today?"
         )
         metrics = {
             "income": USER_PROFILE["income"],
             "savings": USER_PROFILE["savings"],
-            "runway": USER_PROFILE["discretionary_runway"]
+            "runway": USER_PROFILE["discretionary_runway"],
+            "portfolio_balance": USER_PROFILE["portfolio_balance"]
         }
+        
+    else:
+        # Polish: helpful fallback instead of hardcoded Zomato output
+        avatar_state = "friendly"
+        speech_text = (
+            f"I'm still learning, Sejal. I currently specialize in analyzing your cash flow and "
+            f"optimizing asset allocation. Try asking me to 'Analyze my spending'."
+        )
+        metrics = {}
 
     return {
         "avatar_state": avatar_state,
@@ -141,7 +155,5 @@ async def chat_advisory(request: ChatRequest):
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
-    # Disable reload in production to optimize performance/resources
     is_prod = os.environ.get("ENV") == "production"
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=not is_prod)
-
