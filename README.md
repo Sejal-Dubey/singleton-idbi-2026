@@ -72,7 +72,13 @@ Below is the interface state processing live transactional feedback:
    npm install
    npm run dev
    ```
+### 🛠️ Developer Telemetry (Hidden Command)
+To prove the efficiency of our edge-deployed architecture and stateless backend, we built a live telemetry interceptor directly into the UI.
 
+**Try it out:**
+1. Open the live deployment link.
+2. Type `/benchmark` into the chat input and hit send.
+3. The UI will instantly render a **System Performance Report**, calculating the live, dynamic API round-trip latency using the browser's native `performance.now()` API, alongside our Core Web Vitals and Regex security overhead.
 ### ☁️ Cloud Infrastructure Mapping
 
 * **Production Backend (Render / Heroku):**
