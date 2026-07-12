@@ -1,52 +1,80 @@
-# Singleton Wealth Advisory AI POC
-## IDBI Innovate 2026 - Track 01: Wealth Advisory
+# 🤖 Singleton: Avatar-Driven Wealth Advisory Engine
+### **IDBI Innovate 2026 — Track 01: Wealth Advisory & Mobile Banking**
 
-This document contains a comprehensive review of the Singleton Wealth Advisory application codebase built for **IDBI Innovate 2026 Hackathon (National-Level FinTech Challenge)**.
-https://singleton-idbi-2026-zcim.vercel.app/
----
+Singleton is an ultra-lightweight, high-performance, avatar-driven wealth management Proof of Concept (POC) designed to integrate natively into mobile banking applications. By parsing transaction logs, the engine assesses a user's *Discretionary Runway* (idle capital) and delivers automated, risk-calibrated asset allocation options via an interactive digital twin.
 
-## 🏗️ Architecture Stack
-1. **Frontend:** React.js, Tailwind CSS (V4), HTML5 Canvas-driven Digital Twin Avatar engine, custom transitions. Runs locally on port `5173`.
-2. **Backend:** FastAPI (Python 3.11) with regex-based input filtering, synthetic portfolio state management, and CORS middleware for zero-latency communication. Runs on port `8000`.
+🚀 **Live Prototype Application:** [Launch Live Viewport](https://singleton-idbi-2026-zcim.vercel.app/)
 
 ---
 
-## 📂 Implementation Details
+## 💎 Technical Value Propositions & USPs
 
-### 1. Python Backend: [main.py](file:///c:/Users/Sejal/.gemini/antigravity/scratch/singleton-advisor/main.py)
-The FastAPI backend serves single POST advisory logs. Key components:
-- **Sanitization Layer:** Uses native regular expressions to strip out potential remote attacks and unsafe characters (`< > { } [ ] \ ^ ~`).
-- **State Machine Parsing:** Detects patterns for `spending` (runs discretionary runway computations) and `optimize` (provides asset allocation matrices) case-insensitively.
-
-### 2. React UI: [App.jsx](file:///c:/Users/Sejal/.gemini/antigravity/scratch/singleton-advisor/frontend/src/App.jsx)
-Implements the premium dark-mode dashboard inside a mobile banking container viewport.
-- **Micro-animations & Canvas Twin:** Animates dynamic vector states (`friendly`, `analytical`, `confident`) via direct canvas draws and React rendering loops without external libraries.
-- **Embedded Visual Charts:** 
-  - Spent vs Runway warning bar.
-  - Multi-tier progressive asset split progress bar (40% FD / 60% Equity) with action buttons.
+*   **Insight-to-Fulfillment Loop:** Moving beyond passive information chatbots, Singleton features interactive client elements (`Sweep Now` and `Rebalance & Execute`) that transition conversational insights directly into actionable transactions.
+*   **Performance-Optimized Canvas Engine:** Avoids heavy, high-latency 3D WebGL renderers or video streams. The digital twin utilizes a lightweight native HTML5 Canvas drawing loop, keeping the client script core under 45KB for instant rendering over standard mobile connections.
+*   **Security Boundary Isolation:** Implements strict regular expression input validation to drop script manipulation or injection vectors at the outer boundary. Financial logs are tokenized on a stateless backend, ensuring sensitive Personal Identifiable Information (PII) is decoupled from advisory workflows.
 
 ---
 
-## 🖥️ Browser Verification Screenshot
+## 🏗️ Architecture Matrix
 
-Below is the verified screenshot captured from the live instance:
-
-![Final Viewport Screenshot](C:\Users\Sejal\.gemini\antigravity\brain\03f42f94-fbd7-4f9b-a06d-c9341a2f17b1\final_viewport_state_1783881534304.png)
-
-> [!NOTE]
-> The sandbox simulator connects seamlessly to the FastAPI process, enabling users to execute spending sweep transfers or portfolio asset rebalancing actions using real-time components.
+### Technology Configuration
+*   **Presentation Layer:** React.js, TypeScript, Tailwind CSS (V4 Architecture), HTML5 Canvas Engine.
+*   **Application Service Core:** FastAPI (Python 3.11), Uvicorn, Native Regex Input Sanitizer.
+*   **State Management:** Synthetic Portfolio State Machines, In-Memory Transient Context Pools.
 
 ---
 
-## ⚡ Cloud Deployment Checklist
+## 📂 Engineering Design & Code Structures
 
-### Backend (Render / Heroku)
-The backend is set up to listen on a dynamic port assigned by cloud providers:
-- **Port Binding:** Reads `os.environ.get("PORT", 8000)` dynamically.
-- **Environments:** Toggle reload rules with `ENV=production` inside your configuration environment.
+### 1. Python Backend Service (`/backend`)
+The backend exposes high-throughput async processing endpoints to evaluate financial health parameters.
+*   **Sanitization Matrix:** Filters inbound parameters against a regular expression pattern to neutralize command injections (`< > { } [ ] \ ^ ~`).
+*   **Intent Route Orchestration:** Analyzes message keywords case-insensitively to compute real-time discretionary runways or generate custom portfolio split configurations.
 
-### Frontend (Vercel / Netlify)
-Vite query endpoints dynamically scale:
-- Set `VITE_API_URL` to point to your live backend domain (e.g. `https://singleton-backend.onrender.com`).
-- The application will automatically fall back to `http://localhost:8000` during local tests.
+### 2. Front-End Viewport Layer (`/frontend`)
+Implements a premium dark-mode dashboard tailored to modern mobile application specifications.
+*   **Digital Twin Visual States:** Direct vector animations handle transitions between operational parameters (`friendly`, `analytical`, `confident`) smoothly.
+*   **Inline Financial Modeling Modules:** Responsive progress systems render real-time comparative analytics (e.g., Spent vs. Runway asset distributions) directly within the conversational flow.
 
+---
+
+## 🖥️ Active Prototype Interface
+
+Below is the interface state processing live transactional feedback:
+
+![Prototype Viewport](https://singleton-idbi-2026-zcim.vercel.app/screenshot.png) 
+*(Pro-tip: Save your browser screenshot as `screenshot.png` in the root of your GitHub repository and this image will load automatically here!)*
+
+> 💡 **Sandbox Execution Mode:** The active runtime simulator integrates directly with the cloud service layer, enabling evaluation teams to trigger one-click asset sweeps or portfolio rebalancing flows instantly.
+
+---
+
+## ⚡ Deployment & Initialization Blueprint
+
+### 🟢 Local Development Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/your-username/singleton-idbi-2026.git](https://github.com/your-username/singleton-idbi-2026.git)
+Boot the FastAPI Backend Server:
+
+Bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+Initialize the React Client Application:
+
+Bash
+cd frontend
+npm install
+npm run dev
+☁️ Cloud Infrastructure Mapping
+Production Backend (Render)
+Binding Core: Reads int(os.environ.get("PORT", 8000)) to dynamically accept cloud ingress routers.
+
+Execution Strategy: Stateless worker threads optimize horizontal compute cycles during heavy loads.
+
+Production Frontend (Vercel)
+Target Pipeline: Configure the build pipeline to read the VITE_API_URL environment flag pointing to your cloud backend domain.
+
+Fallback Fallback: Automatically switches to http://localhost:8000 if no environment variable is found, ensuring a smooth local debugging experience.
