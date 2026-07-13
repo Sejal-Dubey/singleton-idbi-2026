@@ -1,4 +1,3 @@
-<img width="3514" height="4390" alt="API-Driven User Interaction-2026-07-13-121407" src="https://github.com/user-attachments/assets/d0560d92-aa4f-48eb-98a9-6b1fcfa647e0" />
 # 🤖 Singleton: Avatar-Driven Wealth Advisory Engine
 ### **IDBI Innovate 2026 — Track 01: Wealth Advisory & Mobile Banking**
 
@@ -40,6 +39,11 @@ Implements a premium dark-mode dashboard tailored to modern mobile application s
 *   **Inline Financial Modeling Modules:** Responsive progress systems render real-time comparative analytics (e.g., Spent vs. Runway asset distributions) directly within the conversational flow.
 
 ---
+
+## Process Flow diagram
+
+<img width="1007" height="390" alt="Screenshot 2026-07-13 195223" src="https://github.com/user-attachments/assets/369f9773-44c1-4f91-963c-898550a9d8b0" />
+
 
 ## 🖥️ Active Prototype Interface
 
