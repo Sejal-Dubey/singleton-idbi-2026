@@ -1,3 +1,4 @@
+<img width="3514" height="4390" alt="API-Driven User Interaction-2026-07-13-121407" src="https://github.com/user-attachments/assets/d0560d92-aa4f-48eb-98a9-6b1fcfa647e0" />
 # 🤖 Singleton: Avatar-Driven Wealth Advisory Engine
 ### **IDBI Innovate 2026 — Track 01: Wealth Advisory & Mobile Banking**
 
@@ -17,6 +18,7 @@ Singleton is an ultra-lightweight, high-performance, avatar-driven wealth manage
 ---
 
 ## 🏗️ Architecture Matrix
+<img width="3514" height="4390" alt="API-Driven User Interaction-2026-07-13-121407" src="https://github.com/user-attachments/assets/20511693-8c64-40d4-9b50-9e27e5eedd2e" />
 
 ### Technology Configuration
 *   **Presentation Layer:** React.js, TypeScript, Tailwind CSS (V4 Architecture), HTML5 Canvas Engine.
