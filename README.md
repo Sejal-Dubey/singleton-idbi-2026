@@ -4,6 +4,7 @@
 Singleton is an ultra-lightweight, high-performance, avatar-driven wealth management Proof of Concept (POC) designed to integrate natively into mobile banking applications. By parsing transaction logs, the engine assesses a user's *Discretionary Runway* (idle capital) and delivers automated, risk-calibrated asset allocation options via an interactive digital twin.
 
 🚀 **Live Prototype Application:** [Launch Live Viewport](https://singleton-idbi-2026-zcim.vercel.app/)
+(please click clear chat if the output takes time to load as free tier deployment has been done)
 
 ---
 
